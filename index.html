@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio Management Dashboard</title>
+
+  <link rel="stylesheet" href="style.css" />
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <header class="header">
+    <div>
+      <h1>Portfolio Management Dashboard</h1>
+      <p>Phân tích lợi suất, rủi ro, Sharpe Ratio, CAPM và danh mục đầu tư tối ưu</p>
+    </div>
+
+    <nav>
+      <a href="#overview">Tổng quan</a>
+      <a href="#stocks">Cổ phiếu</a>
+      <a href="#portfolio">Danh mục</a>
+      <a href="#methodology">Phương pháp</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section id="overview" class="hero">
+      <div>
+        <span class="tag">Investment Dashboard</span>
+        <h2>Quản lý danh mục đầu tư theo phong cách hiện đại</h2>
+        <p>
+          Website hỗ trợ phân tích các cổ phiếu, đánh giá rủi ro - lợi nhuận,
+          tính Sharpe Ratio và lựa chọn danh mục tối ưu.
+        </p>
+      </div>
+
+      <div class="hero-card">
+        <p>Danh mục tối ưu hiện tại</p>
+        <h3 id="bestPortfolioName">Đang tính...</h3>
+        <span id="bestPortfolioSharpe">Sharpe Ratio: --</span>
+      </div>
+    </section>
+
+    <section class="cards">
+      <div class="card">
+        <p>Risk-free Rate</p>
+        <h3 id="rfRate">4.50%</h3>
+      </div>
+
+      <div class="card">
+        <p>Market Return</p>
+        <h3 id="marketReturn">11.00%</h3>
+      </div>
+
+      <div class="card">
+        <p>Portfolio Return</p>
+        <h3 id="portfolioReturn">--</h3>
+      </div>
+
+      <div class="card">
+        <p>Portfolio Risk</p>
+        <h3 id="portfolioRisk">--</h3>
+      </div>
+    </section>
+
+    <section id="stocks" class="panel">
+      <div class="section-title">
+        <h2>Stock Watchlist</h2>
+        <p>Danh sách 5 cổ phiếu dùng để xây dựng 10 danh mục tiềm năng</p>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Mã</th>
+              <th>Ngành</th>
+              <th>Expected Return</th>
+              <th>Risk</th>
+              <th>Beta</th>
+            </tr>
+          </thead>
+          <tbody id="stockTable"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="portfolio" class="grid-2">
+      <div class="panel">
+        <div class="section-title">
+          <h2>Manual Portfolio Analysis</h2>
+          <p>Nhập tỷ trọng danh mục, sau đó bấm tính toán</p>
+        </div>
+
+        <div class="weights">
+          <label>HPG (%) <input type="number" id="wHPG" value="30" /></label>
+          <label>KDC (%) <input type="number" id="wKDC" value="20" /></label>
+          <label>FPT (%) <input type="number" id="wFPT" value="25" /></label>
+          <label>VNM (%) <input type="number" id="wVNM" value="15" /></label>
+          <label>VCB (%) <input type="number" id="wVCB" value="10" /></label>
+        </div>
+
+        <button onclick="calculateManualPortfolio()">Calculate Portfolio</button>
+
+        <div class="result-box">
+          <p id="manualResult">Kết quả sẽ hiển thị tại đây.</p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="section-title">
+          <h2>Portfolio Allocation</h2>
+          <p>Biểu đồ tỷ trọng danh mục</p>
+        </div>
+
+        <canvas id="allocationChart"></canvas>
+      </div>
+    </section>
+
+    <section class="grid-2">
+      <div class="panel">
+        <div class="section-title">
+          <h2>Expected Return by Stock</h2>
+          <p>So sánh lợi suất kỳ vọng của từng cổ phiếu</p>
+        </div>
+
+        <canvas id="returnChart"></canvas>
+      </div>
+
+      <div class="panel">
+        <div class="section-title">
+          <h2>Risk - Return Map</h2>
+          <p>Vị trí từng cổ phiếu theo rủi ro và lợi suất</p>
+        </div>
+
+        <canvas id="riskReturnChart"></canvas>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="section-title">
+        <h2>Optimal Risky Portfolio</h2>
+        <p>
+          Web tự tạo 10 danh mục từ 5 cổ phiếu, mỗi danh mục gồm 3 cổ phiếu,
+          sau đó chọn danh mục có Sharpe Ratio cao nhất.
+        </p>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Danh mục</th>
+              <th>Return</th>
+              <th>Risk</th>
+              <th>Sharpe Ratio</th>
+            </tr>
+          </thead>
+          <tbody id="optimalTable"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="methodology" class="panel">
+      <div class="section-title">
+        <h2>Methodology</h2>
+        <p>Các công thức chính được sử dụng trong website</p>
+      </div>
+
+      <div class="method-list">
+        <div>
+          <h3>Portfolio Return</h3>
+          <p>Rp = w1R1 + w2R2 + ... + wnRn</p>
+        </div>
+
+        <div>
+          <h3>Portfolio Risk</h3>
+          <p>Được tính dựa trên tỷ trọng, phương sai và hiệp phương sai giữa các cổ phiếu.</p>
+        </div>
+
+        <div>
+          <h3>Sharpe Ratio</h3>
+          <p>Sharpe = (Rp - Rf) / σp</p>
+        </div>
+
+        <div>
+          <h3>CAPM</h3>
+          <p>E(Ri) = Rf + βi × [E(Rm) - Rf]</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Portfolio Management Dashboard | Student Project</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
