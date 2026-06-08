@@ -3,198 +3,263 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Portfolio Management Dashboard</title>
-
+  <title>Portfolio Exchange Dashboard</title>
   <link rel="stylesheet" href="style.css" />
-
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <header class="header">
-    <div>
-      <h1>Portfolio Management Dashboard</h1>
-      <p>Phân tích lợi suất, rủi ro, Sharpe Ratio, CAPM và danh mục đầu tư tối ưu</p>
-    </div>
-
-    <nav>
-      <a href="#overview">Tổng quan</a>
-      <a href="#stocks">Cổ phiếu</a>
-      <a href="#portfolio">Danh mục</a>
-      <a href="#methodology">Phương pháp</a>
-    </nav>
-  </header>
-
-  <main class="container">
-    <section id="overview" class="hero">
-      <div>
-        <span class="tag">Investment Dashboard</span>
-        <h2>Quản lý danh mục đầu tư theo phong cách hiện đại</h2>
-        <p>
-          Website hỗ trợ phân tích các cổ phiếu, đánh giá rủi ro - lợi nhuận,
-          tính Sharpe Ratio và lựa chọn danh mục tối ưu.
-        </p>
-      </div>
-
-      <div class="hero-card">
-        <p>Danh mục tối ưu hiện tại</p>
-        <h3 id="bestPortfolioName">Đang tính...</h3>
-        <span id="bestPortfolioSharpe">Sharpe Ratio: --</span>
-      </div>
-    </section>
-
-    <section class="cards">
-      <div class="card">
-        <p>Risk-free Rate</p>
-        <h3 id="rfRate">4.50%</h3>
-      </div>
-
-      <div class="card">
-        <p>Market Return</p>
-        <h3 id="marketReturn">11.00%</h3>
-      </div>
-
-      <div class="card">
-        <p>Portfolio Return</p>
-        <h3 id="portfolioReturn">--</h3>
-      </div>
-
-      <div class="card">
-        <p>Portfolio Risk</p>
-        <h3 id="portfolioRisk">--</h3>
-      </div>
-    </section>
-
-    <section id="stocks" class="panel">
-      <div class="section-title">
-        <h2>Stock Watchlist</h2>
-        <p>Danh sách 5 cổ phiếu dùng để xây dựng 10 danh mục tiềm năng</p>
-      </div>
-
-      <div class="table-wrapper">
-        <table>
-          <thead>
-            <tr>
-              <th>Mã</th>
-              <th>Ngành</th>
-              <th>Expected Return</th>
-              <th>Risk</th>
-              <th>Beta</th>
-            </tr>
-          </thead>
-          <tbody id="stockTable"></tbody>
-        </table>
-      </div>
-    </section>
-
-    <section id="portfolio" class="grid-2">
-      <div class="panel">
-        <div class="section-title">
-          <h2>Manual Portfolio Analysis</h2>
-          <p>Nhập tỷ trọng danh mục, sau đó bấm tính toán</p>
-        </div>
-
-        <div class="weights">
-          <label>HPG (%) <input type="number" id="wHPG" value="30" /></label>
-          <label>KDC (%) <input type="number" id="wKDC" value="20" /></label>
-          <label>FPT (%) <input type="number" id="wFPT" value="25" /></label>
-          <label>VNM (%) <input type="number" id="wVNM" value="15" /></label>
-          <label>VCB (%) <input type="number" id="wVCB" value="10" /></label>
-        </div>
-
-        <button onclick="calculateManualPortfolio()">Calculate Portfolio</button>
-
-        <div class="result-box">
-          <p id="manualResult">Kết quả sẽ hiển thị tại đây.</p>
-        </div>
-      </div>
-
-      <div class="panel">
-        <div class="section-title">
-          <h2>Portfolio Allocation</h2>
-          <p>Biểu đồ tỷ trọng danh mục</p>
-        </div>
-
-        <canvas id="allocationChart"></canvas>
-      </div>
-    </section>
-
-    <section class="grid-2">
-      <div class="panel">
-        <div class="section-title">
-          <h2>Expected Return by Stock</h2>
-          <p>So sánh lợi suất kỳ vọng của từng cổ phiếu</p>
-        </div>
-
-        <canvas id="returnChart"></canvas>
-      </div>
-
-      <div class="panel">
-        <div class="section-title">
-          <h2>Risk - Return Map</h2>
-          <p>Vị trí từng cổ phiếu theo rủi ro và lợi suất</p>
-        </div>
-
-        <canvas id="riskReturnChart"></canvas>
-      </div>
-    </section>
-
-    <section class="panel">
-      <div class="section-title">
-        <h2>Optimal Risky Portfolio</h2>
-        <p>
-          Web tự tạo 10 danh mục từ 5 cổ phiếu, mỗi danh mục gồm 3 cổ phiếu,
-          sau đó chọn danh mục có Sharpe Ratio cao nhất.
-        </p>
-      </div>
-
-      <div class="table-wrapper">
-        <table>
-          <thead>
-            <tr>
-              <th>Danh mục</th>
-              <th>Return</th>
-              <th>Risk</th>
-              <th>Sharpe Ratio</th>
-            </tr>
-          </thead>
-          <tbody id="optimalTable"></tbody>
-        </table>
-      </div>
-    </section>
-
-    <section id="methodology" class="panel">
-      <div class="section-title">
-        <h2>Methodology</h2>
-        <p>Các công thức chính được sử dụng trong website</p>
-      </div>
-
-      <div class="method-list">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">P</div>
         <div>
-          <h3>Portfolio Return</h3>
-          <p>Rp = w1R1 + w2R2 + ... + wnRn</p>
-        </div>
-
-        <div>
-          <h3>Portfolio Risk</h3>
-          <p>Được tính dựa trên tỷ trọng, phương sai và hiệp phương sai giữa các cổ phiếu.</p>
-        </div>
-
-        <div>
-          <h3>Sharpe Ratio</h3>
-          <p>Sharpe = (Rp - Rf) / σp</p>
-        </div>
-
-        <div>
-          <h3>CAPM</h3>
-          <p>E(Ri) = Rf + βi × [E(Rm) - Rf]</p>
+          <h1>Portfolio Exchange</h1>
+          <p>Stock & Markowitz Terminal</p>
         </div>
       </div>
-    </section>
-  </main>
 
-  <footer>
-    <p>Portfolio Management Dashboard | Student Project</p>
-  </footer>
+      <nav class="side-nav">
+        <a href="#market" class="active">Market</a>
+        <a href="#stocks">Watchlist</a>
+        <a href="#charts">Charts</a>
+        <a href="#portfolio">Portfolio</a>
+        <a href="#orders">Order Demo</a>
+        <a href="#methodology">Methodology</a>
+      </nav>
+
+      <div class="mini-panel">
+        <span>Data source</span>
+        <strong>Monthly prices 05/2021–05/2026</strong>
+        <small>STB · VNM · DCM · FPT · GMD</small>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Portfolio Management Course Project</p>
+          <h2>Sàn chứng khoán mô phỏng cho danh mục đầu tư</h2>
+        </div>
+        <div class="top-actions">
+          <button class="ghost" id="themeToggle">Dark / Light</button>
+          <button class="primary" id="exportBtn">Export report</button>
+        </div>
+      </header>
+
+      <section id="market" class="market-strip">
+        <div class="index-card">
+          <span>PM-Index</span>
+          <strong id="pmIndex">--</strong>
+          <small id="pmIndexChange">--</small>
+        </div>
+        <div class="index-card">
+          <span>Best Sharpe</span>
+          <strong id="bestSharpeCard">--</strong>
+          <small id="bestComboCard">--</small>
+        </div>
+        <div class="index-card">
+          <span>Risk-free rate</span>
+          <strong><input id="rfInput" type="number" step="0.1" value="3.3" />%</strong>
+          <small>Annual, editable</small>
+        </div>
+        <div class="index-card">
+          <span>Market mode</span>
+          <strong id="marketStatus">OPEN DEMO</strong>
+          <small>GitHub Pages static dashboard</small>
+        </div>
+      </section>
+
+      <div class="ticker-tape" id="tickerTape"></div>
+
+      <section class="terminal-grid">
+        <div id="stocks" class="panel watchlist-panel">
+          <div class="panel-title">
+            <div>
+              <h3>Watchlist</h3>
+              <p>Bấm vào mã để đổi biểu đồ và bảng thông tin</p>
+            </div>
+          </div>
+          <div id="watchlist" class="watchlist"></div>
+        </div>
+
+        <div id="charts" class="panel chart-panel">
+          <div class="panel-title chart-title-row">
+            <div>
+              <h3 id="chartTitle">Price Chart</h3>
+              <p id="chartSubtitle">Monthly close price</p>
+            </div>
+            <div class="segmented">
+              <button data-chart-mode="price" class="active">Giá</button>
+              <button data-chart-mode="normalized">Index 100</button>
+              <button data-chart-mode="returns">Return</button>
+            </div>
+          </div>
+          <canvas id="mainChart"></canvas>
+        </div>
+
+        <div class="panel stock-detail">
+          <div class="panel-title">
+            <div>
+              <h3 id="selectedTicker">--</h3>
+              <p id="selectedSector">--</p>
+            </div>
+            <span class="pill" id="selectedSignal">--</span>
+          </div>
+          <div class="quote-price" id="selectedPrice">--</div>
+          <div class="metric-list">
+            <div><span>Monthly change</span><strong id="selectedChange">--</strong></div>
+            <div><span>Mean return / month</span><strong id="selectedMean">--</strong></div>
+            <div><span>Volatility / month</span><strong id="selectedRisk">--</strong></div>
+            <div><span>Beta vs PM-Index</span><strong id="selectedBeta">--</strong></div>
+            <div><span>Annualized return</span><strong id="selectedAnnual">--</strong></div>
+            <div><span>Max drawdown</span><strong id="selectedDrawdown">--</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel board-panel">
+        <div class="panel-title">
+          <div>
+            <h3>Bảng giá mô phỏng</h3>
+            <p>Giá cuối kỳ, biến động tháng gần nhất và chỉ số rủi ro - lợi suất</p>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="price-board">
+            <thead>
+              <tr>
+                <th>Mã</th>
+                <th>Ngành</th>
+                <th>Giá cuối kỳ</th>
+                <th>+/-</th>
+                <th>%</th>
+                <th>Return/tháng</th>
+                <th>Risk/tháng</th>
+                <th>Beta</th>
+                <th>Signal</th>
+              </tr>
+            </thead>
+            <tbody id="priceBoard"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="portfolio" class="portfolio-grid">
+        <div class="panel">
+          <div class="panel-title">
+            <div>
+              <h3>Optimal Risky Portfolio</h3>
+              <p>Tạo 10 danh mục 3/5 mã và tối ưu tỷ trọng theo Sharpe Ratio</p>
+            </div>
+          </div>
+          <div class="controls-grid">
+            <label>Min weight (%)<input id="minWeight" type="number" value="10" min="0" max="100" /></label>
+            <label>Max weight (%)<input id="maxWeight" type="number" value="80" min="0" max="100" /></label>
+            <label>Step (%)<input id="stepWeight" type="number" value="5" min="1" max="25" /></label>
+          </div>
+          <button class="primary full" id="optimizeBtn">Run optimization</button>
+          <div class="best-box" id="bestBox">Đang tính...</div>
+          <div class="table-wrap compact-table">
+            <table>
+              <thead><tr><th>Portfolio</th><th>Weights</th><th>Return</th><th>Risk</th><th>Sharpe</th></tr></thead>
+              <tbody id="optimalTable"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">
+            <div>
+              <h3>Allocation Simulator</h3>
+              <p>Nhập vốn đầu tư để chuyển tỷ trọng tối ưu thành số tiền và số cổ phiếu</p>
+            </div>
+          </div>
+          <label class="capital-input">Vốn đầu tư mô phỏng (VND)
+            <input id="capitalInput" type="number" value="300000000" step="1000000" />
+          </label>
+          <canvas id="allocationChart"></canvas>
+          <div class="table-wrap compact-table">
+            <table>
+              <thead><tr><th>Mã</th><th>Tỷ trọng</th><th>Số tiền</th><th>CP ước tính</th></tr></thead>
+              <tbody id="allocationTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="portfolio-grid">
+        <div class="panel">
+          <div class="panel-title">
+            <div>
+              <h3>Manual Portfolio vs Optimal</h3>
+              <p>Nhập tỷ trọng thủ công để so sánh với danh mục tối ưu</p>
+            </div>
+          </div>
+          <div id="manualWeights" class="manual-weights"></div>
+          <button class="ghost full" id="manualCalcBtn">Compare portfolio</button>
+          <div class="comparison" id="comparisonBox">Kết quả so sánh sẽ hiện ở đây.</div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">
+            <div>
+              <h3>Risk - Return Map</h3>
+              <p>So sánh rủi ro và lợi suất giữa các mã</p>
+            </div>
+          </div>
+          <canvas id="riskReturnChart"></canvas>
+        </div>
+      </section>
+
+      <section class="portfolio-grid">
+        <div class="panel">
+          <div class="panel-title">
+            <div>
+              <h3>Correlation Heatmap</h3>
+              <p>Ma trận tương quan phục vụ Markowitz diversification</p>
+            </div>
+          </div>
+          <div id="heatmap" class="heatmap"></div>
+        </div>
+
+        <div id="orders" class="panel">
+          <div class="panel-title">
+            <div>
+              <h3>Demo Order Ticket</h3>
+              <p>Mô phỏng đặt lệnh, không phải giao dịch thật</p>
+            </div>
+          </div>
+          <div class="order-grid">
+            <label>Mã<select id="orderTicker"></select></label>
+            <label>Lệnh<select id="orderSide"><option>BUY</option><option>SELL</option></select></label>
+            <label>Số lượng<input id="orderQty" type="number" value="100" min="1" /></label>
+            <label>Giá<input id="orderPrice" type="number" /></label>
+          </div>
+          <button class="primary full" id="placeOrderBtn">Add demo order</button>
+          <div class="order-value" id="orderValue">Giá trị lệnh: --</div>
+          <div id="orderLog" class="order-log"></div>
+        </div>
+      </section>
+
+      <section id="methodology" class="panel methodology">
+        <div class="panel-title">
+          <div>
+            <h3>Methodology</h3>
+            <p>Công thức và cách dashboard tính toán</p>
+          </div>
+        </div>
+        <div class="method-cards">
+          <div><strong>Return</strong><span>Rₜ = Pₜ / Pₜ₋₁ - 1</span></div>
+          <div><strong>Portfolio Return</strong><span>Rₚ = Σ wᵢRᵢ</span></div>
+          <div><strong>Portfolio Risk</strong><span>σₚ = √(wᵀΣw)</span></div>
+          <div><strong>Sharpe Ratio</strong><span>(Rₚ - Rf) / σₚ</span></div>
+          <div><strong>Beta</strong><span>Cov(Rᵢ, Rm) / Var(Rm)</span></div>
+          <div><strong>CAPM</strong><span>E(Rᵢ)=Rf+βᵢ[E(Rm)-Rf]</span></div>
+        </div>
+        <textarea id="reportText" readonly placeholder="Bấm Export report để tạo tóm tắt kết quả..."></textarea>
+      </section>
+    </main>
+  </div>
 
   <script src="script.js"></script>
 </body>
