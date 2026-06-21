@@ -9,8 +9,8 @@
 
 const TICKERS = ['STB', 'VNM', 'DCM', 'FPT', 'GMD'];
 const SECTORS = {
-  STB: 'Ngân hàng', VNM: 'Tiêu dùng thiết yếu',
-  DCM: 'Vật liệu / Phân bón', FPT: 'Công nghệ', GMD: 'Logistics'
+  STB: 'Banking', VNM: 'Consumer Staples',
+  DCM: 'Materials / Fertilizers', FPT: 'Technology', GMD: 'Logistics'
 };
 const COLORS_MAP = {
   STB: '#38bdf8', VNM: '#f97316', DCM: '#22c55e', FPT: '#ef4444', GMD: '#a855f7'
@@ -316,10 +316,10 @@ function beta(ticker) {
 function signalFor(ticker) {
   const b = beta(ticker);
   const m = EXCEL_STATS[ticker].mean;
-  if (m > 0.02 && b > 1.0) return 'Mua mạnh';
-  if (m > 0.01 && b > 0.8) return 'Mua';
+  if (m > 0.02 && b > 1.0) return 'Buy mạnh';
+  if (m > 0.01 && b > 0.8) return 'Buy';
   if (m > 0 && b >= 0.5) return 'Nắm giữ';
-  if (m < 0) return 'Bán';
+  if (m < 0) return 'Sell';
   return 'Trung lập';
 }
 
@@ -422,7 +422,7 @@ function renderHeaderCards() {
   if (comboEl) comboEl.innerHTML = `<span class="metric-value">STB–DCM–GMD</span><span class="metric-sub">MVEP Portfolio</span>`;
 
   const rfEl = el('rfCard');
-  if (rfEl) rfEl.innerHTML = `<span class="metric-value">${pct(RF_MONTHLY, 4)}</span><span class="metric-sub">Rf/tháng (4.40%/năm)</span>`;
+  if (rfEl) rfEl.innerHTML = `<span class="metric-value">${pct(RF_MONTHLY, 4)}</span><span class="metric-sub">Rf/month (4.40%/year)</span>`;
 
   const raEl = el('riskAversionCard');
   if (raEl) raEl.innerHTML = `<span class="metric-value">A = ${RISK_AVERSION_A}</span><span class="metric-sub">y* = ${pct(Y_STAR, 0)}</span>`;
@@ -570,7 +570,7 @@ function renderMainChart() {
       fill: false
     });
   } else {
-    if (titleEl) titleEl.textContent = 'Suất sinh lợi hàng tháng';
+    if (titleEl) titleEl.textContent = 'Suất sinh lợi hàng month';
     if (subEl) subEl.textContent = 'Simple monthly returns';
     const retLabels = labels.slice(1);
     TICKERS.forEach(t => {
@@ -635,8 +635,8 @@ function renderPriceBoard() {
   if (!el) return;
   const l = latest();
   let html = `<table class="data-table"><thead><tr>
-    <th>Mã</th><th>Ngành</th><th>Giá 05/2026</th><th>+/- tháng</th><th>% tháng</th>
-    <th>E(r)/tháng</th><th>Variance</th><th>σ/tháng</th><th>Signal</th>
+    <th>Mã</th><th>Ngành</th><th>Price 05/2026</th><th>+/- month</th><th>% month</th>
+    <th>E(r)/month</th><th>Variance</th><th>σ/month</th><th>Signal</th>
   </tr></thead><tbody>`;
   TICKERS.forEach(t => {
     const chg = latestChange(t);
@@ -675,7 +675,7 @@ function renderStatsTable() {
   const el = document.getElementById('statsTable');
   if (!el) return;
   let html = `<table class="data-table"><thead><tr>
-    <th>Mã</th><th>E(r)/tháng</th><th>Variance</th><th>σ/tháng</th>
+    <th>Mã</th><th>E(r)/month</th><th>Variance</th><th>σ/month</th>
   </tr></thead><tbody>`;
   TICKERS.forEach(t => {
     const s = EXCEL_STATS[t];
@@ -810,7 +810,7 @@ function renderSolverTable() {
   const el = document.getElementById('optimalTable');
   if (!el) return;
   let html = `<table class="data-table"><thead><tr>
-    <th>#</th><th>Portfolio</th><th>Weights</th><th>E(rp)/tháng</th><th>σp/tháng</th><th>Sharpe</th>
+    <th>#</th><th>Portfolio</th><th>Weights</th><th>E(rp)/month</th><th>σp/month</th><th>Sharpe</th>
   </tr></thead><tbody>`;
   SOLVER_COMBOS.forEach((c, i) => {
     const best = c.name === 'STB–DCM–GMD' ? 'best-row' : '';
@@ -994,7 +994,7 @@ function renderAllocationTable() {
   const rf = capital * (1 - Y_STAR);
 
   let html = `<table class="data-table"><thead><tr>
-    <th>Thành phần</th><th>Tỷ trọng</th><th>Giá trị (VNĐ)</th><th>Số CP (ước tính)</th>
+    <th>Thành phần</th><th>Tỷ trọng</th><th>Price trị (VNĐ)</th><th>Số CP (ước tính)</th>
   </tr></thead><tbody>`;
 
   const l = latest();
@@ -1070,7 +1070,7 @@ function compareManual() {
   if (!el) return;
 
   if (Math.abs(totalW - 100) > 0.01) {
-    el.innerHTML = `<div class="error-box">⚠️ Tổng tỷ trọng = ${totalW.toFixed(1)}% (phải = 100%)</div>`;
+    el.innerHTML = `<div class="error-box">⚠️ Tổng B trọng = ${totalW.toFixed(1)}% (phải = 100%)</div>`;
     return;
   }
 
@@ -1094,13 +1094,13 @@ function compareManual() {
       <th>Metric</th><th>Manual Portfolio</th><th>MVEP (Optimal)</th><th>So sánh</th>
     </tr></thead><tbody>
     <tr>
-      <td>E(rp)/tháng</td>
+      <td>E(rp)/month</td>
       <td>${pct(portRet, 4)}</td>
       <td>${pct(MVEP.ret, 4)}</td>
       <td class="${portRet >= MVEP.ret ? 'up' : 'down'}">${portRet >= MVEP.ret ? '✅' : '❌'}</td>
     </tr>
     <tr>
-      <td>σp/tháng</td>
+      <td>σp/month</td>
       <td>${pct(portRisk, 4)}</td>
       <td>${pct(MVEP.risk, 4)}</td>
       <td class="${portRisk <= MVEP.risk ? 'up' : 'down'}">${portRisk <= MVEP.risk ? '✅' : '❌'}</td>
@@ -1350,13 +1350,13 @@ function renderFinPlanChart() {
       labels: FIN_YEARS.map(String),
       datasets: [
         {
-          label: 'Thu nhập',
+          label: 'Income',
           data: FIN_INCOME,
           backgroundColor: '#22c55e',
           borderRadius: 3
         },
         {
-          label: 'Chi tiêu',
+          label: 'Expense',
           data: FIN_EXPENSE,
           backgroundColor: '#ef4444',
           borderRadius: 3
@@ -1407,19 +1407,19 @@ function renderCashFlowAllocation() {
           borderRadius: 2
         },
         {
-          label: 'Đầu tư MVEP',
+          label: 'MVEP Invest',
           data: FIN_INVEST,
           backgroundColor: '#22c55e',
           borderRadius: 2
         },
         {
-          label: 'Quỹ Nhà',
+          label: 'House Fund',
           data: FIN_HOUSE,
           backgroundColor: '#3b82f6',
           borderRadius: 2
         },
         {
-          label: 'Quỹ Xe',
+          label: 'Car Fund',
           data: FIN_CAR,
           backgroundColor: '#a855f7',
           borderRadius: 2
@@ -1464,7 +1464,7 @@ function renderAccumChart() {
       datasets: [
         {
           type: 'line',
-          label: 'Tích lũy MVEP',
+          label: 'MVEP Accum.',
           data: MVEP_ACCUM,
           borderColor: '#22c55e',
           backgroundColor: '#22c55e22',
@@ -1490,7 +1490,7 @@ function renderAccumChart() {
         },
         {
           type: 'bar',
-          label: 'Đóng góp hàng năm',
+          label: 'Đóng góp hàng year',
           data: ANNUAL_CONTRIB,
           backgroundColor: '#38bdf844',
           borderColor: '#38bdf8',
@@ -1615,7 +1615,7 @@ function renderHouseFundChart() {
       ctx2.stroke();
       ctx2.fillStyle = '#ef4444';
       ctx2.font = 'bold 11px sans-serif';
-      ctx2.fillText('Mục tiêu: 4 tỷ ₫', chart.chartArea.left + 5, yPx - 6);
+      ctx2.fillText('Mục tiêu: 4 B ₫', chart.chartArea.left + 5, yPx - 6);
       ctx2.restore();
     }
   };
@@ -1810,7 +1810,7 @@ function renderMCDistChart(mc) {
         x: {
           ticks: { color: getCSS('--muted', '#94a3b8'), font: { size: 9 }, maxRotation: 45 },
           grid: { display: false },
-          title: { display: true, text: 'Giá trị cuối (VNĐ)', color: getCSS('--text', '#e2e8f0') }
+          title: { display: true, text: 'Price trị cuối (VNĐ)', color: getCSS('--text', '#e2e8f0') }
         },
         y: {
           ticks: { color: getCSS('--muted', '#94a3b8') },
@@ -1984,17 +1984,17 @@ function renderMarketNotes() {
     {
       icon: '📈',
       title: 'STB tăng trưởng mạnh nhất',
-      body: `E(r) = ${pct(EXCEL_STATS.STB.mean, 2)}/tháng, giá tăng từ 24.100 lên 66.200 (+${pct((66200-24100)/24100, 1)}) trong 5 năm.`
+      body: `E(r) = ${pct(EXCEL_STATS.STB.mean, 2)}/month, giá tăng từ 24.100 lên 66.200 (+${pct((66200-24100)/24100, 1)}) trong 5 year.`
     },
     {
       icon: '⚠️',
       title: 'VNM có E(r) âm',
-      body: `E(r) = ${pct(EXCEL_STATS.VNM.mean, 4)}/tháng — cổ phiếu duy nhất có suất sinh lợi kỳ vọng âm trong danh mục.`
+      body: `E(r) = ${pct(EXCEL_STATS.VNM.mean, 4)}/month — cổ phiếu duy nhất có suất sinh lợi kỳ vọng âm trong danh mục.`
     },
     {
       icon: '🔗',
       title: 'DCM–GMD tương quan cao nhất',
-      body: `Hệ số tương quan = 0.5818 — đa dạng hóa giữa 2 mã này kém hiệu quả hơn các cặp khác.`
+      body: `Hệ số tương quan = 0.5818 — đa dạng hóa between 2 mã này kém hiệu quả hơn các cặp khác.`
     },
     {
       icon: '🏆',
@@ -2003,8 +2003,8 @@ function renderMarketNotes() {
     },
     {
       icon: '💰',
-      title: 'Kế hoạch tài chính 10 năm',
-      body: `Tích lũy MVEP dự kiến ~${(MVEP_ACCUM[9]/1e9).toFixed(1)} tỷ ₫ vào 2035, vượt tiết kiệm ~${((MVEP_ACCUM[9] - SAVINGS_ACCUM[9])/1e9).toFixed(1)} tỷ ₫.`
+      title: 'Kế hoạch tài chính 10 year',
+      body: `MVEP Accum. dự kiến ~${(MVEP_ACCUM[9]/1e9).toFixed(1)} B ₫ ando 2035, vượt tiết kiệm ~${((MVEP_ACCUM[9] - SAVINGS_ACCUM[9])/1e9).toFixed(1)} B ₫.`
     }
   ];
 
@@ -2090,7 +2090,7 @@ function renderOrderLog() {
     return;
   }
   let html = `<table class="data-table"><thead><tr>
-    <th>Thời gian</th><th>Mã</th><th>Lệnh</th><th>KL</th><th>Giá</th><th>Giá trị</th><th>Trạng thái</th>
+    <th>Thời gian</th><th>Mã</th><th>Lệnh</th><th>KL</th><th>Price</th><th>Price trị</th><th>Trạng thái</th>
   </tr></thead><tbody>`;
   orderLog.forEach(o => {
     const cls = o.side === 'MUA' ? 'up' : 'down';
@@ -2118,7 +2118,7 @@ function exportReport() {
   const l = latest();
   let txt = '═══════════════════════════════════════════════\n';
   txt += '  BÁO CÁO QUẢN TRỊ DANH MỤC ĐẦU TƯ\n';
-  txt += '  Dữ liệu: 05/2021 – 05/2026 (60 tháng)\n';
+  txt += '  Dữ liệu: 05/2021 – 05/2026 (60 month)\n';
   txt += '═══════════════════════════════════════════════\n\n';
 
   txt += '1. THỐNG KÊ CỔ PHIẾU\n';
@@ -2126,15 +2126,15 @@ function exportReport() {
   TICKERS.forEach(t => {
     const s = EXCEL_STATS[t];
     txt += `  ${t} (${SECTORS[t]})\n`;
-    txt += `    Giá hiện tại: ${money.format(l[t])} ₫\n`;
-    txt += `    E(r)/tháng: ${pct(s.mean, 4)}   σ: ${pct(s.std, 4)}   Var: ${num(s.variance, 6)}\n`;
+    txt += `    Price hiện tại: ${money.format(l[t])} ₫\n`;
+    txt += `    E(r)/month: ${pct(s.mean, 4)}   σ: ${pct(s.std, 4)}   Var: ${num(s.variance, 6)}\n`;
     txt += `    Beta: ${beta(t).toFixed(4)}   Max DD: ${pct(maxDrawdown(t), 2)}\n\n`;
   });
 
   txt += '2. PORTFOLIO TỐI ƯU (MVEP)\n';
   txt += '─────────────────────────────────────────\n';
   txt += `  Tổ hợp: STB–DCM–GMD\n`;
-  txt += `  Tỷ trọng: STB ${pct(MVEP.weights[0])}, DCM ${pct(MVEP.weights[1])}, GMD ${pct(MVEP.weights[2])}\n`;
+  txt += `  Weights: STB ${pct(MVEP.weights[0])}, DCM ${pct(MVEP.weights[1])}, GMD ${pct(MVEP.weights[2])}\n`;
   txt += `  E(rp) = ${pct(MVEP.ret, 4)}   σp = ${pct(MVEP.risk, 4)}   Sharpe = ${MVEP.sharpe.toFixed(4)}\n\n`;
 
   txt += '3. COMPLETE PORTFOLIO\n';
@@ -2145,7 +2145,7 @@ function exportReport() {
 
   txt += '4. THÔNG SỐ\n';
   txt += '─────────────────────────────────────────\n';
-  txt += `  Rf = ${pct(RF_MONTHLY, 4)}/tháng (${pct(RF_MONTHLY * 12, 2)}/năm)\n`;
+  txt += `  Rf = ${pct(RF_MONTHLY, 4)}/month (${pct(RF_MONTHLY * 12, 2)}/year)\n`;
   txt += `  Risk Aversion A = ${RISK_AVERSION_A}\n\n`;
 
   txt += '5. 10 TỔ HỢP SOLVER\n';
@@ -2158,9 +2158,9 @@ function exportReport() {
   txt += '6. KẾ HOẠCH TÀI CHÍNH 10 NĂM\n';
   txt += '─────────────────────────────────────────\n';
   FIN_YEARS.forEach((y, i) => {
-    txt += `  ${y}: Thu nhập ${vnd(FIN_INCOME[i])} | Chi ${vnd(FIN_EXPENSE[i])} | Net ${vnd(FIN_NET_CF[i])}\n`;
+    txt += `  ${y}: Income ${vnd(FIN_INCOME[i])} | Chi ${vnd(FIN_EXPENSE[i])} | Net ${vnd(FIN_NET_CF[i])}\n`;
   });
-  txt += `\n  Tích lũy MVEP 2035: ${vnd(MVEP_ACCUM[9])}\n`;
+  txt += `\n  MVEP Accum. 2035: ${vnd(MVEP_ACCUM[9])}\n`;
   txt += `  Tích lũy Tiết kiệm 2035: ${vnd(SAVINGS_ACCUM[9])}\n`;
 
   el.value = txt;
