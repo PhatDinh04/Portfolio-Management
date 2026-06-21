@@ -3,42 +3,60 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Portfolio Exchange Dashboard</title>
+  <title>Portfolio Management Dashboard - Group 4</title>
+  <meta name="description" content="Dashboard quản lý danh mục đầu tư theo mô hình Markowitz. STB · VNM · DCM · FPT · GMD. Giai đoạn 05/2021 – 05/2026." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <div class="app-shell">
+
+    <!-- ═══════════════════ SIDEBAR ═══════════════════ -->
     <aside class="sidebar">
       <div class="brand">
-        <div class="brand-icon">P</div>
+        <div class="brand-icon">G4</div>
         <div>
           <h1>Portfolio Exchange</h1>
-          <p>Stock & Markowitz Terminal</p>
+          <p>STB · VNM · DCM · FPT · GMD</p>
         </div>
       </div>
 
       <nav class="side-nav">
         <a href="#market" class="active">Market</a>
         <a href="#stocks">Watchlist</a>
-        <a href="#charts">Charts</a>
+        <a href="#statistics">Statistics</a>
         <a href="#portfolio">Portfolio</a>
+        <a href="#frontier">CAL &amp; Frontier</a>
+        <a href="#finance">Financial Plan</a>
+        <a href="#montecarlo">Monte Carlo</a>
         <a href="#orders">Order Demo</a>
         <a href="#methodology">Methodology</a>
       </nav>
 
       <div class="mini-panel">
         <span>Data source</span>
-        <strong>Monthly prices 05/2021–05/2026</strong>
-        <small>STB · VNM · DCM · FPT · GMD</small>
+        <strong>Excel Group 4</strong>
+        <small>Monthly prices 05/2021–05/2026</small>
+      </div>
+      <div class="mini-panel accent">
+        <span>Optimal risky portfolio</span>
+        <strong>STB · DCM · GMD</strong>
+        <small>Sharpe ratio: 0.2884</small>
       </div>
     </aside>
 
+    <!-- ═══════════════════ MAIN ═══════════════════ -->
     <main class="main">
+
+      <!-- ─── Topbar ─── -->
       <header class="topbar">
         <div>
           <p class="eyebrow">Portfolio Management Course Project</p>
           <h2>Sàn chứng khoán mô phỏng cho danh mục đầu tư</h2>
+          <p class="subhead">Dashboard đồng bộ theo số liệu Excel: giá, lợi suất, phương sai, hiệp phương sai, Solver, CAL, Efficient Frontier &amp; Monte Carlo.</p>
         </div>
         <div class="top-actions">
           <button class="ghost" id="themeToggle">Dark / Light</button>
@@ -46,6 +64,7 @@
         </div>
       </header>
 
+      <!-- ─── Market Strip ─── -->
       <section id="market" class="market-strip">
         <div class="index-card">
           <span>PM-Index</span>
@@ -54,23 +73,25 @@
         </div>
         <div class="index-card">
           <span>Best Sharpe</span>
-          <strong id="bestSharpeCard">--</strong>
-          <small id="bestComboCard">--</small>
+          <strong id="bestSharpeCard">0.2884</strong>
+          <small id="bestComboCard">STB · DCM · GMD</small>
         </div>
         <div class="index-card">
           <span>Risk-free rate</span>
-          <strong><input id="rfInput" type="number" step="0.1" value="3.3" />%</strong>
-          <small>Annual, editable</small>
+          <strong id="rfCard">0.3667%</strong>
+          <small>0.3667%/tháng · 4.40%/năm</small>
         </div>
         <div class="index-card">
-          <span>Market mode</span>
-          <strong id="marketStatus">OPEN DEMO</strong>
-          <small>GitHub Pages static dashboard</small>
+          <span>Risk aversion A</span>
+          <strong id="riskAversionCard">3.5</strong>
+          <small>Complete portfolio y = 75%</small>
         </div>
       </section>
 
+      <!-- ─── Ticker Tape ─── -->
       <div class="ticker-tape" id="tickerTape"></div>
 
+      <!-- ─── Watchlist + Chart + Detail ─── -->
       <section class="terminal-grid">
         <div id="stocks" class="panel watchlist-panel">
           <div class="panel-title">
@@ -108,35 +129,28 @@
           <div class="quote-price" id="selectedPrice">--</div>
           <div class="metric-list">
             <div><span>Monthly change</span><strong id="selectedChange">--</strong></div>
-            <div><span>Mean return / month</span><strong id="selectedMean">--</strong></div>
-            <div><span>Volatility / month</span><strong id="selectedRisk">--</strong></div>
+            <div><span>E(r)/tháng</span><strong id="selectedMean">--</strong></div>
+            <div><span>σ/tháng</span><strong id="selectedRisk">--</strong></div>
+            <div><span>Variance</span><strong id="selectedVariance">--</strong></div>
             <div><span>Beta vs PM-Index</span><strong id="selectedBeta">--</strong></div>
-            <div><span>Annualized return</span><strong id="selectedAnnual">--</strong></div>
             <div><span>Max drawdown</span><strong id="selectedDrawdown">--</strong></div>
           </div>
         </div>
       </section>
 
+      <!-- ─── Price Board ─── -->
       <section class="panel board-panel">
         <div class="panel-title">
           <div>
             <h3>Bảng giá mô phỏng</h3>
-            <p>Giá cuối kỳ, biến động tháng gần nhất và chỉ số rủi ro - lợi suất</p>
+            <p>Giá cuối kỳ, biến động tháng gần nhất và chỉ số rủi ro - lợi suất từ Excel</p>
           </div>
         </div>
         <div class="table-wrap">
           <table class="price-board">
             <thead>
               <tr>
-                <th>Mã</th>
-                <th>Ngành</th>
-                <th>Giá cuối kỳ</th>
-                <th>+/-</th>
-                <th>%</th>
-                <th>Return/tháng</th>
-                <th>Risk/tháng</th>
-                <th>Beta</th>
-                <th>Signal</th>
+                <th>Mã</th><th>Ngành</th><th>Giá 05/2026</th><th>+/- tháng</th><th>% tháng</th><th>E(r)/tháng</th><th>Variance</th><th>σ/tháng</th><th>Signal</th>
               </tr>
             </thead>
             <tbody id="priceBoard"></tbody>
@@ -144,21 +158,53 @@
         </div>
       </section>
 
+      <hr class="section-divider" />
+
+      <!-- ─── Statistics Section ─── -->
+      <section id="statistics" class="portfolio-grid">
+        <div class="panel">
+          <div class="panel-title">
+            <div>
+              <h3>Return &amp; Risk Statistics</h3>
+              <p>E(r), phương sai và độ lệch chuẩn theo sheet Characteristics</p>
+            </div>
+          </div>
+          <div class="table-wrap compact-table">
+            <table>
+              <thead><tr><th>Mã</th><th>E(r)/tháng</th><th>Variance</th><th>σ/tháng</th></tr></thead>
+              <tbody id="statsTable"></tbody>
+            </table>
+          </div>
+          <canvas id="riskReturnChart"></canvas>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">
+            <div>
+              <h3>Covariance &amp; Correlation</h3>
+              <p>Ma trận phục vụ mô hình Markowitz</p>
+            </div>
+            <div class="segmented small-segmented">
+              <button data-matrix="corr" class="active">Corr</button>
+              <button data-matrix="cov">Cov</button>
+            </div>
+          </div>
+          <div id="matrixGrid" class="heatmap"></div>
+        </div>
+      </section>
+
+      <hr class="section-divider" />
+
+      <!-- ─── Optimal Risky Portfolio ─── -->
       <section id="portfolio" class="portfolio-grid">
         <div class="panel">
           <div class="panel-title">
             <div>
-              <h3>Optimal Risky Portfolio</h3>
-              <p>Tạo 10 danh mục 3/5 mã và tối ưu tỷ trọng theo Sharpe Ratio</p>
+              <h3>Optimal Risky Portfolio – Excel Solver</h3>
+              <p>10 danh mục 3/5 mã và tỷ trọng tối ưu theo Sharpe Ratio</p>
             </div>
           </div>
-          <div class="controls-grid">
-            <label>Min weight (%)<input id="minWeight" type="number" value="10" min="0" max="100" /></label>
-            <label>Max weight (%)<input id="maxWeight" type="number" value="80" min="0" max="100" /></label>
-            <label>Step (%)<input id="stepWeight" type="number" value="5" min="1" max="25" /></label>
-          </div>
-          <button class="primary full" id="optimizeBtn">Run optimization</button>
-          <div class="best-box" id="bestBox">Đang tính...</div>
+          <div class="best-box" id="bestBox">Đang tải kết quả Solver...</div>
           <div class="table-wrap compact-table">
             <table>
               <thead><tr><th>Portfolio</th><th>Weights</th><th>Return</th><th>Risk</th><th>Sharpe</th></tr></thead>
@@ -170,8 +216,31 @@
         <div class="panel">
           <div class="panel-title">
             <div>
-              <h3>Allocation Simulator</h3>
-              <p>Nhập vốn đầu tư để chuyển tỷ trọng tối ưu thành số tiền và số cổ phiếu</p>
+              <h3>Sharpe Ratio – 10 Tổ Hợp</h3>
+              <p>Biểu đồ so sánh Sharpe Ratio (đỏ = tối ưu STB–DCM–GMD)</p>
+            </div>
+          </div>
+          <canvas id="sharpeBarChart"></canvas>
+        </div>
+      </section>
+
+      <!-- ─── Pie chart + Complete Portfolio Allocation ─── -->
+      <section class="portfolio-grid">
+        <div class="panel">
+          <div class="panel-title">
+            <div>
+              <h3>Tỷ trọng MVEP – STB · DCM · GMD</h3>
+              <p>Danh mục rủi ro tối ưu (Tangency Portfolio)</p>
+            </div>
+          </div>
+          <canvas id="pieChart"></canvas>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">
+            <div>
+              <h3>Complete Portfolio Allocation</h3>
+              <p>y = 75% vào danh mục rủi ro tối ưu, 25% vào tài sản phi rủi ro</p>
             </div>
           </div>
           <label class="capital-input">Vốn đầu tư mô phỏng (VND)
@@ -180,34 +249,92 @@
           <canvas id="allocationChart"></canvas>
           <div class="table-wrap compact-table">
             <table>
-              <thead><tr><th>Mã</th><th>Tỷ trọng</th><th>Số tiền</th><th>CP ước tính</th></tr></thead>
+              <thead><tr><th>Tài sản</th><th>Tỷ trọng</th><th>Số tiền</th><th>CP ước tính</th></tr></thead>
               <tbody id="allocationTable"></tbody>
             </table>
           </div>
         </div>
       </section>
 
+      <!-- ─── Manual vs Optimal + Market Notes ─── -->
       <section class="portfolio-grid">
         <div class="panel">
-          <div class="panel-title">
-            <div>
-              <h3>Manual Portfolio vs Optimal</h3>
-              <p>Nhập tỷ trọng thủ công để so sánh với danh mục tối ưu</p>
-            </div>
-          </div>
+          <div class="panel-title"><div><h3>Manual Portfolio vs Optimal</h3><p>Nhập tỷ trọng thủ công để so sánh với danh mục tối ưu</p></div></div>
           <div id="manualWeights" class="manual-weights"></div>
           <button class="ghost full" id="manualCalcBtn">Compare portfolio</button>
           <div class="comparison" id="comparisonBox">Kết quả so sánh sẽ hiện ở đây.</div>
         </div>
+        <div class="panel">
+          <div class="panel-title"><div><h3>Market Notes</h3><p>Tóm tắt nhanh từ dữ liệu Excel</p></div></div>
+          <div id="marketNotes" class="news-grid"></div>
+        </div>
+      </section>
 
+      <hr class="section-divider" />
+
+      <!-- ─── CAL & Efficient Frontier ─── -->
+      <section id="frontier" class="portfolio-grid">
+        <div class="panel wide-chart">
+          <div class="panel-title">
+            <div>
+              <h3>CAL &amp; Efficient Frontier</h3>
+              <p>Đường CAL từ risk-free đến MVEP và đường biên hiệu quả theo Excel</p>
+            </div>
+          </div>
+          <canvas id="frontierChart"></canvas>
+        </div>
+        <div class="panel">
+          <div class="panel-title"><div><h3>MVEP Summary</h3><p>Danh mục tiếp tuyến STB – DCM – GMD</p></div></div>
+          <div class="metric-list big" id="frontierSummary"></div>
+        </div>
+      </section>
+
+      <!-- ─── Complete Portfolio Compare ─── -->
+      <section class="portfolio-grid">
+        <div class="panel wide-chart">
+          <div class="panel-title">
+            <div>
+              <h3>So sánh E(rc) &amp; Utility – 10 Complete Portfolio</h3>
+              <p>Từ sheet "The Optimal Complete" trong Excel</p>
+            </div>
+          </div>
+          <canvas id="cpCompareChart"></canvas>
+        </div>
+      </section>
+
+      <hr class="section-divider" />
+
+      <!-- ─── Financial Plan ─── -->
+      <section id="finance" class="portfolio-grid">
         <div class="panel">
           <div class="panel-title">
             <div>
-              <h3>Risk - Return Map</h3>
-              <p>So sánh rủi ro và lợi suất giữa các mã</p>
+              <h3>Thu nhập – Chi tiêu – Dòng tiền ròng</h3>
+              <p>Kế hoạch tài chính gia đình 2026–2035</p>
             </div>
           </div>
-          <canvas id="riskReturnChart"></canvas>
+          <canvas id="finPlanChart1"></canvas>
+        </div>
+        <div class="panel">
+          <div class="panel-title">
+            <div>
+              <h3>Phân bổ dòng tiền ròng</h3>
+              <p>Quỹ khẩn cấp · Đầu tư MVEP · Quỹ nhà · Quỹ xe</p>
+            </div>
+          </div>
+          <canvas id="finPlanChart2"></canvas>
+        </div>
+      </section>
+
+      <section class="portfolio-grid">
+        <div class="panel wide-chart">
+          <div class="panel-title">
+            <div>
+              <h3>Tích lũy tài sản: MVEP vs Tiết kiệm</h3>
+              <p>So sánh đầu tư MVEP (STB–DCM–GMD) với gửi tiết kiệm 6%/năm</p>
+            </div>
+          </div>
+          <canvas id="accumChart"></canvas>
         </div>
       </section>
 
@@ -215,49 +342,91 @@
         <div class="panel">
           <div class="panel-title">
             <div>
-              <h3>Correlation Heatmap</h3>
-              <p>Ma trận tương quan phục vụ Markowitz diversification</p>
+              <h3>Quỹ mua xe (2026–2028)</h3>
+              <p>Lãi suất 6%/năm</p>
             </div>
           </div>
-          <div id="heatmap" class="heatmap"></div>
+          <canvas id="carFundChart"></canvas>
         </div>
-
-        <div id="orders" class="panel">
+        <div class="panel">
           <div class="panel-title">
             <div>
-              <h3>Demo Order Ticket</h3>
-              <p>Mô phỏng đặt lệnh, không phải giao dịch thật</p>
+              <h3>Quỹ mua nhà (2026–2035)</h3>
+              <p>Lãi suất 6%/năm</p>
             </div>
           </div>
-          <div class="order-grid">
-            <label>Mã<select id="orderTicker"></select></label>
-            <label>Lệnh<select id="orderSide"><option>BUY</option><option>SELL</option></select></label>
-            <label>Số lượng<input id="orderQty" type="number" value="100" min="1" /></label>
-            <label>Giá<input id="orderPrice" type="number" /></label>
-          </div>
-          <button class="primary full" id="placeOrderBtn">Add demo order</button>
-          <div class="order-value" id="orderValue">Giá trị lệnh: --</div>
-          <div id="orderLog" class="order-log"></div>
+          <canvas id="houseFundChart"></canvas>
         </div>
       </section>
 
-      <section id="methodology" class="panel methodology">
-        <div class="panel-title">
-          <div>
-            <h3>Methodology</h3>
-            <p>Công thức và cách dashboard tính toán</p>
+      <hr class="section-divider" />
+
+      <!-- ─── Monte Carlo ─── -->
+      <section id="montecarlo">
+        <div class="portfolio-grid">
+          <div class="panel wide-chart">
+            <div class="panel-title">
+              <div>
+                <h3>Monte Carlo – Phân bố giá trị sau 10 năm</h3>
+                <p>2.000 kịch bản × 120 tháng | E(r) = 2.29%/tháng | σ = 6.68%/tháng</p>
+              </div>
+            </div>
+            <canvas id="mcDistChart"></canvas>
           </div>
         </div>
+
+        <div class="portfolio-grid">
+          <div class="panel">
+            <div class="panel-title">
+              <div>
+                <h3>Monte Carlo – 100 đường tăng trưởng</h3>
+                <p>Đỏ = tốt | Xanh dương = trung bình | Xanh lá = xấu</p>
+              </div>
+            </div>
+            <canvas id="mcPathsChart"></canvas>
+          </div>
+          <div class="panel">
+            <div class="panel-title">
+              <div>
+                <h3>Monte Carlo – Kỳ vọng &amp; Vùng rủi ro</h3>
+                <p>Đường kỳ vọng + vùng 5%–95% và 25%–75%</p>
+              </div>
+            </div>
+            <canvas id="mcExpectedChart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <hr class="section-divider" />
+
+      <!-- ─── Order Demo ─── -->
+      <section id="orders" class="panel">
+        <div class="panel-title"><div><h3>Demo Order Ticket</h3><p>Mô phỏng đặt lệnh, không phải giao dịch thật</p></div></div>
+        <div class="order-grid">
+          <label>Mã<select id="orderTicker"></select></label>
+          <label>Lệnh<select id="orderSide"><option>BUY</option><option>SELL</option></select></label>
+          <label>Số lượng<input id="orderQty" type="number" value="100" min="1" /></label>
+          <label>Giá<input id="orderPrice" type="number" /></label>
+        </div>
+        <button class="primary full" id="placeOrderBtn">Add demo order</button>
+        <div class="order-value" id="orderValue">Giá trị lệnh: --</div>
+        <div id="orderLog" class="order-log"></div>
+      </section>
+
+      <!-- ─── Methodology ─── -->
+      <section id="methodology" class="panel methodology">
+        <div class="panel-title"><div><h3>Methodology</h3><p>Công thức và cách dashboard tính toán</p></div></div>
         <div class="method-cards">
           <div><strong>Return</strong><span>Rₜ = Pₜ / Pₜ₋₁ - 1</span></div>
           <div><strong>Portfolio Return</strong><span>Rₚ = Σ wᵢRᵢ</span></div>
           <div><strong>Portfolio Risk</strong><span>σₚ = √(wᵀΣw)</span></div>
           <div><strong>Sharpe Ratio</strong><span>(Rₚ - Rf) / σₚ</span></div>
-          <div><strong>Beta</strong><span>Cov(Rᵢ, Rm) / Var(Rm)</span></div>
-          <div><strong>CAPM</strong><span>E(Rᵢ)=Rf+βᵢ[E(Rm)-Rf]</span></div>
+          <div><strong>Complete Portfolio</strong><span>y = (E(Rp)-Rf)/(Aσp²)</span></div>
+          <div><strong>CAPM/Beta</strong><span>βᵢ = Cov(Rᵢ,Rm)/Var(Rm)</span></div>
         </div>
         <textarea id="reportText" readonly placeholder="Bấm Export report để tạo tóm tắt kết quả..."></textarea>
       </section>
+
     </main>
   </div>
 
