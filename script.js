@@ -1401,7 +1401,7 @@ function renderCashFlowAllocation() {
       labels: FIN_YEARS.map(String),
       datasets: [
         {
-          label: 'Quỹ Khẩn cấp',
+          label: 'Emergency Fund',
           data: FIN_EMERG,
           backgroundColor: '#f97316',
           borderRadius: 2
@@ -1477,7 +1477,7 @@ function renderAccumChart() {
         },
         {
           type: 'line',
-          label: 'Tích lũy Tiết kiệm',
+          label: 'Accumulated Savings',
           data: SAVINGS_ACCUM,
           borderColor: '#f97316',
           backgroundColor: '#f9731622',
@@ -1490,7 +1490,7 @@ function renderAccumChart() {
         },
         {
           type: 'bar',
-          label: 'Đóng góp hàng year',
+          label: 'Annual contribution',
           data: ANNUAL_CONTRIB,
           backgroundColor: '#38bdf844',
           borderColor: '#38bdf8',
@@ -1562,7 +1562,7 @@ function renderCarFundChart() {
     data: {
       labels: carYears,
       datasets: [{
-        label: 'Quỹ xe tích lũy',
+        label: 'Accumulated vehicle fund',
         data: CAR_FUND,
         backgroundColor: '#a855f7',
         borderRadius: 4,
@@ -1573,7 +1573,7 @@ function renderCarFundChart() {
     options: chartOptions({
       plugins: {
         legend: { display: false },
-        tooltip: { callbacks: { label: ctx => `Tích lũy: ${vnd(ctx.parsed.y)}` } }
+        tooltip: { callbacks: { label: ctx => `Accumulation: ${vnd(ctx.parsed.y)}` } }
       },
       scales: {
         x: {
@@ -1983,28 +1983,28 @@ function renderMarketNotes() {
   const notes = [
     {
       icon: '📈',
-      title: 'STB tăng trưởng mạnh nhất',
-      body: `E(r) = ${pct(EXCEL_STATS.STB.mean, 2)}/month, giá tăng từ 24.100 lên 66.200 (+${pct((66200-24100)/24100, 1)}) trong 5 year.`
+      title: 'STB has the strongest growth.',
+      body: `E(r) = ${pct(EXCEL_STATS.STB.mean, 2)}/month, The price increased from 24,100 to 66,200. (+${pct((66200-24100)/24100, 1)}) in 5 year.`
     },
     {
       icon: '⚠️',
-      title: 'VNM có E(r) âm',
-      body: `E(r) = ${pct(EXCEL_STATS.VNM.mean, 4)}/month — cổ phiếu duy nhất có suất sinh lợi kỳ vọng âm trong danh mục.`
+      title: 'VNM has a negative expected return',
+      body: `E(r) = ${pct(EXCEL_STATS.VNM.mean, 4)}/month — The only stock with a negative expected return in the portfolio.`
     },
     {
       icon: '🔗',
-      title: 'DCM–GMD tương quan cao nhất',
-      body: `Hệ số tương quan = 0.5818 — đa dạng hóa between 2 mã này kém hiệu quả hơn các cặp khác.`
+      title: 'DCM–GMD has the highest correlation.',
+      body: `Correlation coefficient = 0.5818 — diversification between these two stocks is less effective than other pairs.`
     },
     {
       icon: '🏆',
-      title: 'STB–DCM–GMD: Sharpe tối ưu',
-      body: `Portfolio MVEP đạt Sharpe = ${MVEP.sharpe.toFixed(4)}, cao nhất trong 10 tổ hợp 3 cổ phiếu.`
+      title: 'STB–DCM–GMD: Optimal Sharpe',
+      body: `The MVEP portfolio achieved a Sharpe ratio = ${MVEP.sharpe.toFixed(4)}, The highest among the 10 three-stock combinations.`
     },
     {
       icon: '💰',
-      title: 'Kế hoạch tài chính 10 year',
-      body: `MVEP Accum. dự kiến ~${(MVEP_ACCUM[9]/1e9).toFixed(1)} B ₫ ando 2035, vượt tiết kiệm ~${((MVEP_ACCUM[9] - SAVINGS_ACCUM[9])/1e9).toFixed(1)} B ₫.`
+      title: '10-year financial plan',
+      body: `MVEP Accum. Expected ~${(MVEP_ACCUM[9]/1e9).toFixed(1)} B ₫ ando 2035, exceeding savings ~${((MVEP_ACCUM[9] - SAVINGS_ACCUM[9])/1e9).toFixed(1)} B ₫.`
     }
   ];
 
