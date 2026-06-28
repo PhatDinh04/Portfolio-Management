@@ -518,7 +518,7 @@ function renderMainChart() {
   const subEl = document.getElementById('chartSubtitle');
 
   if (chartMode === 'price') {
-    if (titleEl) titleEl.textContent = 'Biến động giá cổ phiếu';
+    if (titleEl) titleEl.textContent = 'Stock price fluctuations';
     if (subEl) subEl.textContent = '05/2021 – 05/2026 (VNĐ)';
     TICKERS.forEach(t => {
       datasets.push({
@@ -545,8 +545,8 @@ function renderMainChart() {
       fill: false
     });
   } else if (chartMode === 'normalized') {
-    if (titleEl) titleEl.textContent = 'Biến động giá chuẩn hóa (Base 100)';
-    if (subEl) subEl.textContent = 'So sánh hiệu quả đầu tư từ điểm xuất phát';
+    if (titleEl) titleEl.textContent = 'Standardized price fluctuations (Base 100)';
+    if (subEl) subEl.textContent = 'Compare the investment efficiency from the starting point';
     TICKERS.forEach(t => {
       datasets.push({
         label: t,
@@ -570,7 +570,7 @@ function renderMainChart() {
       fill: false
     });
   } else {
-    if (titleEl) titleEl.textContent = 'Suất sinh lợi hàng month';
+    if (titleEl) titleEl.textContent = 'Monthly profit rate';
     if (subEl) subEl.textContent = 'Simple monthly returns';
     const retLabels = labels.slice(1);
     TICKERS.forEach(t => {
@@ -704,7 +704,7 @@ function renderRiskReturnChart() {
     type: 'scatter',
     data: {
       datasets: [{
-        label: 'Cổ phiếu',
+        label: 'Stock',
         data: data,
         backgroundColor: TICKERS.map(t => COLORS_MAP[t]),
         pointRadius: 10,
@@ -725,7 +725,7 @@ function renderRiskReturnChart() {
       },
       scales: {
         x: {
-          title: { display: true, text: 'Rủi ro σ (%)', color: getCSS('--text', '#e2e8f0') },
+          title: { display: true, text: 'Risk σ (%)', color: getCSS('--text', '#e2e8f0') },
           ticks: { color: getCSS('--muted', '#94a3b8') },
           grid: { color: 'rgba(148,163,184,0.1)' }
         },
